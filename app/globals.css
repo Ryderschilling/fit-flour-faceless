@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Anton', sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #F5F1EC;
+  color: #141414;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Announce bar link */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F5F1EC;
+}
+::-webkit-scrollbar-thumb {
+  background: #E4DED4;
+  border-radius: 3px;
+}
+
+/* Cart drawer transition */
+.cart-overlay-enter {
+  opacity: 0;
+}
+.cart-overlay-enter-active {
+  opacity: 1;
+  transition: opacity 200ms ease;
+}
+.cart-drawer-enter {
+  transform: translateX(100%);
+}
+.cart-drawer-enter-active {
+  transform: translateX(0);
+  transition: transform 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* FAQ accordion */
+details summary {
+  cursor: pointer;
+  list-style: none;
+}
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* ── Scroll-reveal animation system ───────────────────────── */
+
+/* Base hidden state */
+.reveal {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 1600ms;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/* Animation variants */
+.reveal[data-anim="up"]    { transform: translateY(32px); }
+.reveal[data-anim="down"]  { transform: translateY(-20px); }
+.reveal[data-anim="left"]  { transform: translateX(-32px); }
+.reveal[data-anim="right"] { transform: translateX(32px); }
+.reveal[data-anim="scale"] { transform: scale(0.94); }
+.reveal[data-anim="fade"]  { transform: none; }
+
+/* Triggered state */
+.reveal.is-visible {
+  opacity: 1;
+  transform: none !important;
+}
+
+/* ── Hero entrance animations ──────────────────────────────── */
+@keyframes heroTitle {
+  from { opacity: 0; transform: translateY(-30%) translateY(20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(-30%) scale(1); }
+}
+@keyframes heroBagIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes bagFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+@keyframes heroCta {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-title-anim {
+  animation: heroTitle 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+.hero-bag-anim {
+  animation:
+    heroBagIn 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both,
+    bagFloat  6s ease-in-out 2s infinite;
+}
+.hero-cta-anim {
+  animation: heroCta 1.3s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both;
+}
+
+/* ── Premium Custom Cursor ─────────────────────────────────── */
+@media (pointer: fine) {
+  * { cursor: none !important; }
+
+  .cursor-dot {
+    position: fixed;
+    top: -3px;
+    left: -3px;
+    width: 6px;
+    height: 6px;
+    background: #141414;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    opacity: 0;
+    transition: opacity 0.3s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    will-change: transform;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    top: -20px;
+    left: -20px;
+    width: 40px;
+    height: 40px;
+    border: 1.5px solid rgba(20, 20, 20, 0.35);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    opacity: 0;
+    transition: opacity 0.3s ease, width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s ease;
+    will-change: transform;
+  }
+
+  /* Hover state — ring expands, dot shrinks to invisible */
+  .cursor-ring--hover {
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    left: -30px;
+    border-color: #1B3D35;
+    background: rgba(27, 61, 53, 0.06);
+  }
+
+  .cursor-dot--hover {
+    width: 4px;
+    height: 4px;
+    background: #1B3D35;
+  }
+}
