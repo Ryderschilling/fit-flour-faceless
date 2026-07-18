@@ -193,9 +193,17 @@ export function Footer() {
           <p className="text-xs text-paper/40">
             © {new Date().getFullYear()} Fit Flour. All rights reserved.
           </p>
-          <span className="text-xs text-paper/30 uppercase tracking-widest">
+          <span className="text-xs text-paper/30 uppercase tracking-widest hidden md:block">
             6x Protein · ⅓ Carbs · 1:1 Swap
           </span>
+          <a
+            href="https://ryderschilling.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-paper/30 hover:text-paper/60 transition-colors"
+          >
+            Built by Ryder Schilling
+          </a>
         </div>
       </div>
 
