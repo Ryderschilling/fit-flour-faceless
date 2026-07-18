@@ -37,8 +37,7 @@ export async function getWixReviews(limit = 20): Promise<WixReview[]> {
     const url = `https://api.fera.ai/v3/public/reviews?${params}`
     console.log('[fera-reviews] fetching', url.replace(publicKey, 'REDACTED'))
 
-    // cache: 'no-store' forces a fresh fetch every build — avoids stale build-cache
-    const res = await fetch(url, { cache: 'no-store' })
+    const res = await fetch(url, { next: { revalidate: 3600 } })
 
     if (!res.ok) {
       const body = await res.text()
