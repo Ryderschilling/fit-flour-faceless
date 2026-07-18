@@ -8,6 +8,7 @@ import { Footer } from '@/components/Footer'
 import { CartDrawer } from '@/components/CartDrawer'
 import { CustomCursor } from '@/components/CustomCursor'
 import { SocialProofToast } from '@/components/SocialProofToast'
+import { EmailPopup } from '@/components/EmailPopup'
 
 const anton = Anton({
   weight: '400',
@@ -110,6 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <CartDrawer />
           <SocialProofToast />
+          <EmailPopup />
         </CartProvider>
       </body>
     </html>
