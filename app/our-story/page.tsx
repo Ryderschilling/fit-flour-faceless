@@ -31,12 +31,12 @@ export default function OurStoryPage() {
 
         {/* Story body */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-start max-w-5xl mx-auto">
-          <div className="relative aspect-[3/4] bg-white overflow-hidden">
+          <div className="relative aspect-[3/4] bg-paper overflow-hidden flex items-center justify-center">
             <Image
-              src="/images/lifestyle/img-9246.jpg"
-              alt="Fit Flour — baking with high-protein flour"
+              src="/images/products/fit-flour-bag-hero.png"
+              alt="Fit Flour high-protein flour bag"
               fill
-              className="object-cover"
+              className="object-contain p-8"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>

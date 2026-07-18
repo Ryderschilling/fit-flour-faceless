@@ -4,9 +4,6 @@
  * Fetches published product reviews from the Fera public API and maps them
  * to the WixReview shape consumed by ReviewQuotes.tsx.
  *
- * Cached for 1 hour via Next.js ISR — new reviews appear within the hour
- * without a redeploy.
- *
  * Required env var:
  *   FERA_PUBLIC_KEY  — from app.fera.ai → Configuration → API Keys → Public Key
  */
@@ -33,33 +30,47 @@ export async function getWixReviews(limit = 20): Promise<WixReview[]> {
     const params = new URLSearchParams({
       public_key: publicKey,
       status: 'published',
-      per_page: String(Math.min(limit * 2, 50)), // fetch extra to account for empty-body filtering
+      per_page: String(Math.min(limit * 2, 50)),
       'rating[gte]': '4',
     })
 
-    const res = await fetch(`https://api.fera.ai/v3/public/reviews?${params}`, {
-      next: { revalidate: 3600 }, // ISR: revalidate every hour
-    })
+    const url = `https://api.fera.ai/v3/public/reviews?${params}`
+    console.log('[fera-reviews] fetching', url.replace(publicKey, 'REDACTED'))
+
+    // cache: 'no-store' forces a fresh fetch every build — avoids stale build-cache
+    const res = await fetch(url, { cache: 'no-store' })
 
     if (!res.ok) {
-      console.warn('[fera-reviews] API error', res.status, await res.text())
+      const body = await res.text()
+      console.warn('[fera-reviews] API error', res.status, body)
       return []
     }
 
     const data = await res.json()
-    const reviews: any[] = data.data ?? []
 
-    return reviews
-      .filter((r) => r.body?.trim()) // skip reviews with no text
+    // Log structure so we can debug response shape in build logs
+    console.log('[fera-reviews] response keys:', Object.keys(data))
+    console.log('[fera-reviews] review count:', Array.isArray(data) ? data.length : (data.data?.length ?? data.reviews?.length ?? 'unknown'))
+
+    // Handle multiple possible response shapes from Fera API
+    const rawReviews: any[] =
+      Array.isArray(data)
+        ? data
+        : data.data ?? data.reviews ?? data.results ?? []
+
+    console.log('[fera-reviews] parsed', rawReviews.length, 'reviews')
+
+    return rawReviews
+      .filter((r) => r.body?.trim())
       .slice(0, limit)
       .map((r) => ({
-        id: r.id,
-        authorName: r.customer?.display_name?.trim() || 'Verified Buyer',
+        id: r.id ?? String(Math.random()),
+        authorName: r.customer?.display_name?.trim() || r.reviewer?.name?.trim() || 'Verified Buyer',
         rating: Math.round(r.rating ?? 5),
         body: r.body.trim(),
-        title: r.heading?.trim() || undefined,
-        location: r.customer?.display_location?.trim() || undefined,
-        createdDate: r.created_at ?? '',
+        title: r.heading?.trim() || r.title?.trim() || undefined,
+        location: r.customer?.display_location?.trim() || r.reviewer?.location?.trim() || undefined,
+        createdDate: r.created_at ?? r.submitted_at ?? '',
       }))
   } catch (err) {
     console.warn('[fera-reviews] fetch failed', err)
