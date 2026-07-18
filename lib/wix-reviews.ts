@@ -1,13 +1,14 @@
 /**
- * Wix Reviews API integration.
+ * Fera Reviews integration (replaces Wix native reviews — store uses Fera app).
  *
- * Fetches published store reviews and caches the result for 1 hour via Next.js ISR.
- * Falls back to an empty array if env vars are missing or the API call fails —
- * ReviewQuotes.tsx then renders its static fallback instead.
+ * Fetches published product reviews from the Fera public API and maps them
+ * to the WixReview shape consumed by ReviewQuotes.tsx.
  *
- * Required env vars (set in Vercel dashboard + .env.local):
- *   WIX_API_KEY   — your site's API key  (Settings → Advanced → API Keys)
- *   WIX_SITE_ID   — your site ID          (visible in the Wix dashboard URL)
+ * Cached for 1 hour via Next.js ISR — new reviews appear within the hour
+ * without a redeploy.
+ *
+ * Required env var:
+ *   FERA_PUBLIC_KEY  — from app.fera.ai → Configuration → API Keys → Public Key
  */
 
 export interface WixReview {
@@ -16,60 +17,52 @@ export interface WixReview {
   rating: number
   body: string
   title?: string
+  location?: string
   createdDate: string
 }
 
 export async function getWixReviews(limit = 20): Promise<WixReview[]> {
-  const apiKey = process.env.WIX_API_KEY
-  const siteId = process.env.WIX_SITE_ID
+  const publicKey = process.env.FERA_PUBLIC_KEY
 
-  if (!apiKey || !siteId) {
-    // No credentials — caller uses static fallback
+  if (!publicKey) {
+    console.warn('[fera-reviews] FERA_PUBLIC_KEY not set — using static fallback')
     return []
   }
 
   try {
-    const res = await fetch('https://www.wixapis.com/reviews/v1/reviews/query', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: apiKey,
-        'wix-site-id': siteId,
-      },
-      body: JSON.stringify({
-        query: {
-          filter: {
-            namespace: 'stores',
-            status: 'PUBLISHED',
-          },
-          sort: [{ fieldName: 'createdDate', order: 'DESC' }],
-          paging: { limit },
-        },
-      }),
-      // ISR: Next.js revalidates this fetch result every hour in the background
-      next: { revalidate: 3600 },
+    const params = new URLSearchParams({
+      public_key: publicKey,
+      status: 'published',
+      per_page: String(Math.min(limit * 2, 50)), // fetch extra to account for empty-body filtering
+      'rating[gte]': '4',
+    })
+
+    const res = await fetch(`https://api.fera.ai/v3/public/reviews?${params}`, {
+      next: { revalidate: 3600 }, // ISR: revalidate every hour
     })
 
     if (!res.ok) {
-      console.warn('[wix-reviews] API error', res.status, await res.text())
+      console.warn('[fera-reviews] API error', res.status, await res.text())
       return []
     }
 
     const data = await res.json()
-    const reviews: any[] = data.reviews ?? []
+    const reviews: any[] = data.data ?? []
 
     return reviews
-      .filter((r) => r.content?.body?.trim()) // skip empty bodies
+      .filter((r) => r.body?.trim()) // skip reviews with no text
+      .slice(0, limit)
       .map((r) => ({
         id: r.id,
-        authorName: r.author?.authorName?.trim() || 'Verified Buyer',
-        rating: r.content?.rating ?? 5,
-        body: r.content?.body?.trim() ?? '',
-        title: r.content?.title?.trim() || undefined,
-        createdDate: r.createdDate ?? '',
+        authorName: r.customer?.display_name?.trim() || 'Verified Buyer',
+        rating: Math.round(r.rating ?? 5),
+        body: r.body.trim(),
+        title: r.heading?.trim() || undefined,
+        location: r.customer?.display_location?.trim() || undefined,
+        createdDate: r.created_at ?? '',
       }))
   } catch (err) {
-    console.warn('[wix-reviews] fetch failed', err)
+    console.warn('[fera-reviews] fetch failed', err)
     return []
   }
 }

@@ -45,7 +45,7 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-3 pt-1">
               <a
-                href="https://www.instagram.com/fitflour"
+                href="https://www.instagram.com/fit.flour/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Fit Flour on Instagram"
@@ -95,13 +95,13 @@ export function Footer() {
                 Follow Along
               </p>
               <a
-                href="https://www.instagram.com/fitflour"
+                href="https://www.instagram.com/fit.flour/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-sm text-paper/70 hover:text-paper transition-colors"
               >
                 <InstagramIcon />
-                @fitflour
+                @fit.flour
               </a>
             </div>
           </div>

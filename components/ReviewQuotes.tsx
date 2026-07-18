@@ -69,6 +69,7 @@ export async function ReviewQuotes() {
           authorName: r.authorName,
           rating: r.rating,
           body: r.body,
+          location: r.location,
         }))
       : STATIC_REVIEWS
 

@@ -122,7 +122,7 @@ export default async function RecipesPage() {
             rel="noopener noreferrer"
             className="inline-block border border-ink text-ink text-xs font-bold uppercase tracking-widest px-8 py-4 hover:bg-ink hover:text-paper transition-colors"
           >
-            @fitflour on Instagram
+            @fit.flour on Instagram
           </Link>
         </div>
       </div>

@@ -3,57 +3,46 @@
 /**
  * SocialProofToast — purchase notification badge.
  *
- * Slides in from the bottom-left every 45–90 seconds showing:
- *   "Alex from Denver, CO just bought Fit Flour Original  ·  3 min ago"
+ * On mount, fetches real recent orders from /api/recent-orders and
+ * cycles through them. Falls back to a static pool if the API is
+ * unavailable or returns nothing.
  *
- * First popup fires 8–15 seconds after page load (feels organic, not instant).
- * Auto-dismisses after 5 seconds. Fully accessible (aria-live region).
+ * Shows the first toast 8–15 s after page load, then every 45–90 s.
+ * Auto-dismisses after 5 s.
  */
 
 import { useEffect, useRef, useState } from 'react'
+import type { RecentOrder } from '@/app/api/recent-orders/route'
 
-// ─── Data pools ───────────────────────────────────────────────────────────────
+// ─── Static fallback pool (used if API returns nothing) ───────────────────────
 
-const FIRST_NAMES = [
-  'Alex', 'Sarah', 'Mike', 'Emma', 'Jordan', 'Taylor', 'Chris', 'Ashley',
-  'Ryan', 'Morgan', 'Casey', 'Jamie', 'Sam', 'Riley', 'Drew', 'Avery',
-  'Brooke', 'Cole', 'Dana', 'Evan', 'Fiona', 'Grant', 'Haley', 'Ian',
-  'Jess', 'Kyle', 'Lauren', 'Marcus', 'Nina', 'Owen',
-]
-
-const LOCATIONS = [
-  'Austin, TX', 'Denver, CO', 'Nashville, TN', 'Atlanta, GA', 'Charlotte, NC',
-  'Phoenix, AZ', 'Portland, OR', 'Seattle, WA', 'Chicago, IL', 'Miami, FL',
-  'Dallas, TX', 'Boston, MA', 'Los Angeles, CA', 'New York, NY', 'Houston, TX',
-  'San Diego, CA', 'Minneapolis, MN', 'Tampa, FL', 'Columbus, OH', 'Raleigh, NC',
-]
-
-const PRODUCTS = [
-  { label: 'Fit Flour Original', weight: 3 },
-  { label: 'Gluten Free Blend', weight: 2 },
-  { label: 'Fit Flour Original (2-pack)', weight: 1 },
-]
-
-const TIME_LABELS = [
-  'just now', '1 min ago', '2 min ago', '3 min ago',
-  '5 min ago', '7 min ago', '8 min ago', '11 min ago',
+const STATIC_POOL: RecentOrder[] = [
+  { firstName: 'Sarah',   city: 'Austin',      state: 'TX', product: 'Fit Flour Original', minutesAgo: 4  },
+  { firstName: 'Mike',    city: 'Denver',       state: 'CO', product: 'Fit Flour Original', minutesAgo: 9  },
+  { firstName: 'Jordan',  city: 'Nashville',    state: 'TN', product: 'Gluten Free Blend',  minutesAgo: 12 },
+  { firstName: 'Ashley',  city: 'Atlanta',      state: 'GA', product: 'Fit Flour Original', minutesAgo: 21 },
+  { firstName: 'Taylor',  city: 'Phoenix',      state: 'AZ', product: 'Fit Flour Original', minutesAgo: 33 },
+  { firstName: 'Morgan',  city: 'Seattle',      state: 'WA', product: 'Gluten Free Blend',  minutesAgo: 47 },
+  { firstName: 'Casey',   city: 'Chicago',      state: 'IL', product: 'Fit Flour Original', minutesAgo: 3  },
+  { firstName: 'Riley',   city: 'Charlotte',    state: 'NC', product: 'Fit Flour Original', minutesAgo: 18 },
 ]
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function pick<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)]
+function minutesToLabel(minutes: number): string {
+  if (minutes < 2)  return 'just now'
+  if (minutes < 60) return `${minutes} min ago`
+  const h = Math.round(minutes / 60)
+  return h === 1 ? '1 hour ago' : `${h} hours ago`
 }
 
-/** Weighted random pick — more weight = more likely to appear */
-function pickWeighted(items: { label: string; weight: number }[]): string {
-  const total = items.reduce((s, i) => s + i.weight, 0)
-  let r = Math.random() * total
-  for (const item of items) {
-    r -= item.weight
-    if (r <= 0) return item.label
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
   }
-  return items[items.length - 1].label
+  return a
 }
 
 function randomBetween(min: number, max: number) {
@@ -64,51 +53,64 @@ function randomBetween(min: number, max: number) {
 
 interface ToastData {
   name: string
-  location: string
+  city: string
+  state: string
   product: string
   timeLabel: string
-}
-
-function makeToast(): ToastData {
-  return {
-    name: pick(FIRST_NAMES),
-    location: pick(LOCATIONS),
-    product: pickWeighted(PRODUCTS),
-    timeLabel: pick(TIME_LABELS),
-  }
 }
 
 export function SocialProofToast() {
   const [toast, setToast] = useState<ToastData | null>(null)
   const [visible, setVisible] = useState(false)
-  const hideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const poolRef  = useRef<RecentOrder[]>([])
+  const indexRef = useRef(0)
+  const hideTimerRef  = useRef<ReturnType<typeof setTimeout> | null>(null)
   const cycleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const showToast = () => {
-    // Cancel any pending hide
+  // Fetch real order pool on mount
+  useEffect(() => {
+    fetch('/api/recent-orders')
+      .then((r) => r.ok ? r.json() : { orders: [] })
+      .then(({ orders }: { orders: RecentOrder[] }) => {
+        poolRef.current = shuffle(orders.length > 0 ? orders : STATIC_POOL)
+      })
+      .catch(() => {
+        poolRef.current = shuffle(STATIC_POOL)
+      })
+  }, [])
+
+  const showNext = () => {
+    const pool = poolRef.current.length > 0 ? poolRef.current : shuffle(STATIC_POOL)
+    const order = pool[indexRef.current % pool.length]
+    indexRef.current++
+
     if (hideTimerRef.current) clearTimeout(hideTimerRef.current)
 
-    setToast(makeToast())
+    setToast({
+      name: order.firstName,
+      city: order.city,
+      state: order.state,
+      product: order.product,
+      timeLabel: minutesToLabel(order.minutesAgo),
+    })
     setVisible(true)
 
-    // Auto-hide after 5 s
-    hideTimerRef.current = setTimeout(() => setVisible(false), 5000)
+    hideTimerRef.current = setTimeout(() => setVisible(false), 5_000)
   }
 
   useEffect(() => {
-    // Stagger first appearance so it doesn't feel automated
     const firstDelay = randomBetween(8_000, 15_000)
 
     const scheduleNext = () => {
       const interval = randomBetween(45_000, 90_000)
       cycleTimerRef.current = setTimeout(() => {
-        showToast()
+        showNext()
         scheduleNext()
       }, interval)
     }
 
     const initialTimer = setTimeout(() => {
-      showToast()
+      showNext()
       scheduleNext()
     }, firstDelay)
 
@@ -121,7 +123,6 @@ export function SocialProofToast() {
   }, [])
 
   return (
-    /* aria-live so screen readers announce new purchases */
     <div
       role="status"
       aria-live="polite"
@@ -144,7 +145,7 @@ export function SocialProofToast() {
         {toast && (
           <p className="text-xs text-ink leading-snug">
             <span className="font-semibold">{toast.name}</span>
-            {' '}from {toast.location} just bought{' '}
+            {' '}from {toast.city}, {toast.state} just bought{' '}
             <span className="font-semibold">{toast.product}</span>
             <span className="block text-muted mt-0.5">{toast.timeLabel}</span>
           </p>

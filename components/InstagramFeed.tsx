@@ -15,8 +15,8 @@
 import { AnimateIn } from './AnimateIn'
 
 // ── Update these when going live ──────────────────────────────────────────────
-const INSTAGRAM_HANDLE = 'fitflour'
-const INSTAGRAM_URL = `https://www.instagram.com/${INSTAGRAM_HANDLE}`
+const INSTAGRAM_HANDLE = 'fit.flour'
+const INSTAGRAM_URL = 'https://www.instagram.com/fit.flour/'
 
 // Placeholder reels — replaced by Behold widget once client connects Instagram
 const PLACEHOLDER_REELS = [
