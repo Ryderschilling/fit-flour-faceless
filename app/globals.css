@@ -5,10 +5,20 @@
 :root {
   --font-display: 'Anton', sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
+  /* Hero title — desktop uses large vw-based size */
+  --hero-title-size: clamp(72px, 17vw, 240px);
+}
+
+/* Mobile: scale title to fill the frame without overflowing */
+@media (max-width: 639px) {
+  :root {
+    --hero-title-size: 85px;
+  }
 }
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -17,6 +27,7 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
 }
 
 /* Announce bar link */
@@ -35,6 +46,15 @@ a {
 ::-webkit-scrollbar-thumb {
   background: #E4DED4;
   border-radius: 3px;
+}
+
+/* Mobile carousels — hide horizontal scrollbar */
+.carousel-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.carousel-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 /* Cart drawer transition */
@@ -80,6 +100,12 @@ details summary::-webkit-details-marker {
 .reveal[data-anim="right"] { transform: translateX(32px); }
 .reveal[data-anim="scale"] { transform: scale(0.94); }
 .reveal[data-anim="fade"]  { transform: none; }
+
+/* Mobile: convert horizontal slides to vertical to avoid viewport overflow */
+@media (max-width: 639px) {
+  .reveal[data-anim="left"]  { transform: translateY(16px); }
+  .reveal[data-anim="right"] { transform: translateY(16px); }
+}
 
 /* Triggered state */
 .reveal.is-visible {

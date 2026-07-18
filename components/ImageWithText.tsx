@@ -44,7 +44,7 @@ export function ImageWithText() {
         <div className="h-48 md:h-auto" />
 
         {/* Copy right */}
-        <AnimateIn animation="right" delay={100} className="text-teal flex flex-col gap-6">
+        <AnimateIn animation="right" delay={100} className="text-teal flex flex-col gap-6 items-center text-center md:items-start md:text-left">
           <p className="text-xs font-bold tracking-[0.2em] uppercase text-teal/60">
             The Mission
           </p>
@@ -61,7 +61,7 @@ export function ImageWithText() {
           </p>
           <Link
             href="/shop"
-            className="self-start border border-teal text-teal text-xs font-bold uppercase tracking-widest px-8 py-4 hover:bg-teal hover:text-white transition-colors"
+            className="self-center md:self-start border border-teal text-teal text-xs font-bold uppercase tracking-widest px-8 py-4 hover:bg-teal hover:text-white transition-colors"
           >
             Shop the Blends
           </Link>

@@ -221,7 +221,7 @@ export function Header() {
         aria-label="Navigation menu"
         aria-hidden={!mobileOpen}
         className={[
-          'fixed inset-0 z-40 md:hidden flex flex-col bg-ink',
+          'fixed inset-0 z-[55] md:hidden flex flex-col bg-ink',
           'transition-all duration-[600ms] ease-[cubic-bezier(0.76,0,0.24,1)]',
           mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
         ].join(' ')}

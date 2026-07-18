@@ -6,7 +6,6 @@ import { useEffect, useRef } from 'react'
 import { useCart } from '@/lib/cart-context'
 import type { Product } from '@/lib/commerce'
 
-// Local image map — used when Wix has no images uploaded
 const LOCAL_IMAGES: Record<string, string> = {
   'power-flour': '/images/products/fit-flour-og-shopify.jpg',
   'gluten-free-limited-supply': '/images/products/fit-flour-gf-shopify.jpg',
@@ -14,14 +13,10 @@ const LOCAL_IMAGES: Record<string, string> = {
 
 function getProductImage(product: Product): string {
   const url = product.images[0]?.url
-  // Use Wix CDN image if it's a real remote URL
   if (url && url.startsWith('http')) return url
-  // Use local image if mapped
   if (LOCAL_IMAGES[product.handle]) return LOCAL_IMAGES[product.handle]
-  // Partial slug match (e.g. "gluten" → GF blend)
   const match = Object.entries(LOCAL_IMAGES).find(([k]) => product.handle.includes(k))
   if (match) return match[1]
-  // Final fallback — OG bag
   return '/images/products/fit-flour-og-shopify.jpg'
 }
 
@@ -36,7 +31,6 @@ export function ProductCard({ product }: Props) {
   const imgAlt = product.images[0]?.alt ?? product.title
   const ref = useRef<HTMLElement>(null)
 
-  // Scroll reveal — inline so ProductCard stays a single client component
   useEffect(() => {
     const el = ref.current
     if (!el) return
@@ -60,24 +54,24 @@ export function ProductCard({ product }: Props) {
           alt={imgAlt}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes="(max-width: 768px) 50vw, 33vw"
         />
         {product.tags.includes('best-seller') && (
-          <span className="absolute top-3 left-3 bg-teal text-paper text-[10px] font-bold uppercase tracking-widest px-2 py-1">
+          <span className="absolute top-2 left-2 md:top-3 md:left-3 bg-teal text-paper text-[9px] md:text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 md:px-2 md:py-1">
             Best Seller
           </span>
         )}
       </Link>
 
       {/* Info */}
-      <div className="p-5 flex flex-col gap-3 flex-1">
-        <div className="flex items-start justify-between gap-2">
+      <div className="p-3 md:p-5 flex flex-col gap-2 md:gap-3 flex-1">
+        <div className="flex items-start justify-between gap-1">
           <Link href={`/products/${product.handle}`}>
-            <h3 className="text-sm font-semibold text-ink leading-snug hover:text-teal transition-colors">
+            <h3 className="text-xs md:text-sm font-semibold text-ink leading-snug hover:text-teal transition-colors">
               {product.title}
             </h3>
           </Link>
-          <span className="text-sm font-bold text-teal flex-shrink-0">
+          <span className="text-xs md:text-sm font-bold text-teal flex-shrink-0">
             {formatMoney(product.priceRange.min.amount)}
           </span>
         </div>
@@ -93,7 +87,7 @@ export function ProductCard({ product }: Props) {
             })
           }
           disabled={loading || !variant?.available}
-          className="mt-auto w-full bg-ink text-paper text-xs font-bold uppercase tracking-widest py-3 hover:bg-teal transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-auto w-full bg-ink text-paper text-[10px] md:text-xs font-bold uppercase tracking-widest py-2.5 md:py-3 hover:bg-teal transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {variant?.available ? 'Add to Cart' : 'Sold Out'}
         </button>

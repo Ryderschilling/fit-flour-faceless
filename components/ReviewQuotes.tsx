@@ -33,11 +33,11 @@ const STATIC_REVIEWS: Review[] = [
   },
 ]
 
-function StarRating({ rating }: { rating: number }) {
+function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
   return (
-    <div className="flex gap-1" aria-label={`${rating} out of 5 stars`}>
+    <div className="flex gap-0.5" aria-label={`${rating} out of 5 stars`}>
       {[1, 2, 3, 4, 5].map((s) => (
-        <svg key={s} width="14" height="14" viewBox="0 0 24 24" fill={s <= rating ? '#1B3D35' : '#D1D5DB'} aria-hidden="true">
+        <svg key={s} width={size} height={size} viewBox="0 0 24 24" fill={s <= rating ? '#1B3D35' : '#D1D5DB'} aria-hidden="true">
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
         </svg>
       ))}
@@ -50,7 +50,7 @@ function InitialsAvatar({ name }: { name: string }) {
   const initials = name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()
   return (
     <div
-      className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold"
+      className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-white text-xs font-bold"
       style={{ background: `hsl(${hue}, 35%, 42%)` }}
       aria-hidden="true"
     >
@@ -74,19 +74,78 @@ export async function ReviewQuotes() {
       : STATIC_REVIEWS
 
   return (
-    <section className="bg-paper py-20 md:py-28 px-6" aria-labelledby="reviews-heading">
+    <section className="bg-paper py-12 md:py-28 px-6" aria-labelledby="reviews-heading">
       <div className="max-w-content mx-auto">
 
-        <AnimateIn animation="fade" className="text-center mb-14">
+        <AnimateIn animation="fade" className="text-center mb-10 md:mb-14">
           <h2
             id="reviews-heading"
-            className="font-display text-4xl md:text-5xl uppercase text-ink tracking-tight"
+            className="font-display text-3xl md:text-5xl uppercase text-ink tracking-tight"
           >
             What Bakers Are Saying
           </h2>
         </AnimateIn>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Mobile: premium snap-scroll carousel */}
+        <div className="md:hidden -mx-6 overflow-x-auto carousel-scroll">
+          <div className="flex gap-3 px-6 pb-4 snap-x snap-mandatory">
+            {reviews.map((r) => (
+              <div key={r.id} className="flex-shrink-0 w-[272px] snap-start">
+                <div
+                  className="relative bg-white overflow-hidden h-full flex flex-col"
+                  style={{ boxShadow: '0 4px 24px -4px rgba(27,61,53,0.12), 0 0 0 1px rgba(27,61,53,0.07)' }}
+                >
+                  {/* Teal top accent strip */}
+                  <div className="h-[3px] bg-gradient-to-r from-[#1B3D35] via-[#2D5A4A] to-[#4A7A66]" />
+
+                  <div className="p-5 flex flex-col gap-3 flex-1">
+                    {/* Decorative quote + stars */}
+                    <div className="flex items-start justify-between">
+                      <span
+                        className="font-display text-[64px] leading-[0.6] text-[#1B3D35] select-none"
+                        style={{ opacity: 0.12 }}
+                        aria-hidden="true"
+                      >
+                        &ldquo;
+                      </span>
+                      <StarRating rating={r.rating} size={13} />
+                    </div>
+
+                    {/* Review body */}
+                    <p className="text-ink text-[13px] leading-relaxed flex-1 -mt-1">
+                      &ldquo;{r.body}&rdquo;
+                    </p>
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-3 border-t border-[#1B3D35]/8">
+                      <div className="flex items-center gap-2.5">
+                        <InitialsAvatar name={r.authorName} />
+                        <div>
+                          <cite className="not-italic text-xs font-bold text-ink block leading-tight">
+                            {r.authorName}
+                          </cite>
+                          <span className="text-[11px] text-[#8A8070]">
+                            {r.location ?? 'Verified Buyer'}
+                          </span>
+                        </div>
+                      </div>
+                      <span
+                        className="text-[9px] font-black uppercase tracking-widest text-[#1B3D35] px-2 py-1 rounded-full flex-shrink-0"
+                        style={{ background: 'rgba(27,61,53,0.08)' }}
+                      >
+                        ✓ Verified
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="flex-shrink-0 w-4" aria-hidden="true" />
+          </div>
+        </div>
+
+        {/* Desktop: 3-column grid */}
+        <div className="hidden md:grid grid-cols-3 gap-8">
           {reviews.map((r, i) => (
             <AnimateIn key={r.id} animation="up" delay={i * 90}>
               <blockquote className="bg-white p-8 flex flex-col gap-5 border border-line h-full">

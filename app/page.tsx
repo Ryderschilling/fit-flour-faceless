@@ -7,7 +7,6 @@ import { ReviewQuotes } from '@/components/ReviewQuotes'
 import { InstagramFeed } from '@/components/InstagramFeed'
 import { GlutenFreeCallout } from '@/components/GlutenFreeCallout'
 import { FAQ } from '@/components/FAQ'
-import { FinalCTA } from '@/components/FinalCTA'
 
 export default function HomePage() {
   return (
@@ -21,7 +20,6 @@ export default function HomePage() {
       <InstagramFeed />
       <GlutenFreeCallout />
       <FAQ />
-      <FinalCTA />
     </>
   )
 }

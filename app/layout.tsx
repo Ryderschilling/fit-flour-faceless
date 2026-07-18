@@ -1,8 +1,7 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Anton, Inter } from 'next/font/google'
 import './globals.css'
 import { CartProvider } from '@/lib/cart-context'
-import { AnnouncementBar } from '@/components/AnnouncementBar'
 import { Header } from '@/components/Header'
 import { Footer } from '@/components/Footer'
 import { CartDrawer } from '@/components/CartDrawer'
@@ -23,6 +22,12 @@ const inter = Inter({
   display: 'swap',
 })
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#ffffff',
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://fitflour.shop'),
   title: {
@@ -32,6 +37,16 @@ export const metadata: Metadata = {
   description:
     'Fit Flour is the 1:1 all-purpose flour substitute with 6x the protein and ⅓ the carbs. Gluten-free, dairy-free, nut-free. Shop the Original and Gluten-Free blends.',
   keywords: ['protein flour', 'high protein flour', 'gluten-free flour', 'low carb flour', 'flour substitute', 'fit flour'],
+  manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    shortcut: '/favicon.ico',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -73,7 +88,7 @@ const organizationJsonLd = {
   '@type': 'Organization',
   name: 'Fit Flour',
   url: 'https://fitflour.shop',
-  logo: 'https://fitflour.shop/images/FF-logo-transparent.png',
+  logo: 'https://fitflour.shop/icons/icon-512.png',
   sameAs: ['https://www.instagram.com/fitflour'],
 }
 
@@ -105,7 +120,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-body">
         <CartProvider>
           <CustomCursor />
-          <AnnouncementBar />
           <Header />
           <main>{children}</main>
           <Footer />

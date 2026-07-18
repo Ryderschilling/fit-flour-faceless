@@ -9,6 +9,8 @@
  *
  * Shows the first toast 8–15 s after page load, then every 45–90 s.
  * Auto-dismisses after 5 s.
+ *
+ * Hidden on mobile (md:block) — too intrusive on small screens.
  */
 
 import { useEffect, useRef, useState } from 'react'
@@ -127,11 +129,11 @@ export function SocialProofToast() {
       role="status"
       aria-live="polite"
       aria-atomic="true"
-      className="fixed bottom-6 left-6 z-50 pointer-events-none"
+      className="fixed bottom-6 left-6 z-50 pointer-events-none hidden md:block"
     >
       <div
         className={[
-          'flex items-center gap-3 bg-white border border-line shadow-lg px-4 py-3 max-w-[300px] pointer-events-auto',
+          'flex items-center gap-3 bg-white border border-line shadow-lg px-4 py-3 max-w-[calc(100vw-3rem)] sm:max-w-[300px] pointer-events-auto',
           'transition-all duration-500 ease-out',
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3',
         ].join(' ')}

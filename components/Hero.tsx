@@ -4,7 +4,7 @@ import Image from 'next/image'
 export function Hero() {
   return (
     <section
-      className="relative min-h-[88vh] bg-paper overflow-hidden flex flex-col items-center justify-center pt-6 pb-16 px-6"
+      className="relative bg-paper overflow-hidden flex flex-col items-center justify-center pt-6 pb-8 md:min-h-[88vh] md:pb-16 px-6"
       aria-label="Fit Flour hero"
     >
       {/* Radial gradient */}
@@ -20,13 +20,13 @@ export function Hero() {
       {/* Wordmark + bag */}
       <div
         className="relative w-full flex items-center justify-center"
-        style={{ minHeight: 'clamp(280px, 42vw, 580px)' }}
+        style={{ minHeight: 'clamp(260px, 42vw, 580px)' }}
       >
         {/* FIT FLOUR — animated entrance */}
         <h1
           className="hero-title-anim absolute inset-0 flex items-center justify-center font-display uppercase text-ink leading-none text-center pointer-events-none select-none"
           style={{
-            fontSize: 'clamp(72px, 17vw, 240px)',
+            fontSize: 'var(--hero-title-size)',
             letterSpacing: '-0.02em',
             zIndex: 0,
             transform: 'translateY(-30%)',

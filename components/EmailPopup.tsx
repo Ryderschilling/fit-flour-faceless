@@ -90,7 +90,7 @@ export function EmailPopup() {
         </div>
 
         {/* Right — content panel */}
-        <div className="w-full md:w-[55%] bg-[#F5F1EC] flex flex-col items-center justify-center px-10 py-14 relative">
+        <div className="w-full md:w-[55%] bg-[#F5F1EC] flex flex-col items-center justify-center px-6 py-10 md:px-10 md:py-14 relative">
           {/* X close */}
           <button
             onClick={dismiss}
@@ -110,7 +110,7 @@ export function EmailPopup() {
               </p>
 
               {/* Headline */}
-              <h2 className="font-display text-[2.6rem] leading-[1.05] text-[#141414] text-center mb-3 uppercase">
+              <h2 className="font-display text-[2rem] md:text-[2.6rem] leading-[1.05] text-[#141414] text-center mb-3 uppercase">
                 Save 10%<br />On Your First<br />Order
               </h2>
 
@@ -128,7 +128,7 @@ export function EmailPopup() {
                   placeholder="Enter your email"
                   required
                   autoComplete="email"
-                  className="w-full px-4 py-3.5 bg-white border border-[#E4DED4] text-[#141414] placeholder:text-[#9B9490] text-sm focus:outline-none focus:border-[#1B3D35] transition-colors"
+                  className="w-full px-4 py-3.5 bg-white border border-[#E4DED4] text-[#141414] placeholder:text-[#9B9490] text-base focus:outline-none focus:border-[#1B3D35] transition-colors"
                 />
                 <button
                   type="submit"
@@ -161,7 +161,7 @@ export function EmailPopup() {
                 You're In
               </p>
 
-              <h2 className="font-display text-[2.4rem] leading-[1.05] text-[#141414] text-center mb-3 uppercase">
+              <h2 className="font-display text-[2rem] md:text-[2.4rem] leading-[1.05] text-[#141414] text-center mb-3 uppercase">
                 Here's Your<br />Code
               </h2>
 
@@ -175,7 +175,7 @@ export function EmailPopup() {
                 className="w-full border-2 border-dashed border-[#1B3D35] px-6 py-5 text-center group hover:bg-[#1B3D35]/5 transition-colors"
                 aria-label="Copy discount code"
               >
-                <p className="font-display text-[2rem] tracking-[0.3em] text-[#1B3D35] uppercase">
+                <p className="font-display text-[1.6rem] md:text-[2rem] tracking-[0.15em] md:tracking-[0.3em] text-[#1B3D35] uppercase">
                   {code}
                 </p>
                 <p className="text-xs text-[#9B9490] mt-1.5 group-hover:text-[#1B3D35] transition-colors">

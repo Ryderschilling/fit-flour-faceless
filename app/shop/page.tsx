@@ -16,18 +16,18 @@ export default async function ShopPage() {
   const products = await commerce.getProducts()
 
   return (
-    <div className="bg-paper min-h-screen">
-      <div className="max-w-content mx-auto px-6 py-16 md:py-24">
-        <header className="text-center mb-14">
+    <div className="bg-paper md:min-h-screen">
+      <div className="max-w-content mx-auto px-6 py-10 md:py-24">
+        <header className="text-center mb-8 md:mb-14">
           <p className="text-xs font-bold tracking-[0.2em] uppercase text-muted mb-3">
             All Products
           </p>
-          <h1 className="font-display text-5xl md:text-6xl uppercase text-ink tracking-tight">
+          <h1 className="font-display text-4xl md:text-6xl uppercase text-ink tracking-tight">
             Shop the Blends
           </h1>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
