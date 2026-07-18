@@ -1,11 +1,12 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { useCart } from '@/lib/cart-context'
 // Cart types now come from cart-context directly
 
 export function CartDrawer() {
-  const { cart, cartOpen, closeCart, updateLine, removeLine, checkout, loading } = useCart()
+  const { cart, cartOpen, closeCart, updateLine, removeLine, checkout, loading, checkoutError } = useCart()
 
   const formatMoney = (amount: number, currency = 'USD') =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(amount)
@@ -32,9 +33,20 @@ export function CartDrawer() {
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-line">
-          <h2 className="font-display text-xl uppercase tracking-tight text-ink">
-            Your Bag ({cart?.totalQuantity ?? 0})
-          </h2>
+          <div className="flex items-center gap-3">
+            <Link href="/" onClick={closeCart} aria-label="Fit Flour home">
+              <Image
+                src="/images/FF-logo-transparent.png"
+                alt="Fit Flour"
+                width={28}
+                height={28}
+                className="h-7 w-auto opacity-20"
+              />
+            </Link>
+            <h2 className="font-display text-xl uppercase tracking-tight text-ink">
+              Your Bag ({cart?.totalQuantity ?? 0})
+            </h2>
+          </div>
           <button
             onClick={closeCart}
             aria-label="Close cart"
@@ -129,6 +141,9 @@ export function CartDrawer() {
               </span>
             </div>
             <p className="text-xs text-muted mb-4">Shipping and taxes calculated at checkout.</p>
+            {checkoutError && (
+              <p className="text-xs text-red-600 mb-3 leading-snug">{checkoutError}</p>
+            )}
             <button
               onClick={checkout}
               disabled={loading}

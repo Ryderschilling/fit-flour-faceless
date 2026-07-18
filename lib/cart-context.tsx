@@ -53,6 +53,7 @@ interface CartContextValue {
   removeLine: (lineId: string) => void
   checkout: () => Promise<void>
   loading: boolean
+  checkoutError: string | null
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -98,6 +99,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<Cart>(EMPTY_CART)
   const [cartOpen, setCartOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
   // Restore from sessionStorage on mount
   useEffect(() => { setCart(loadCart()) }, [])
@@ -155,6 +157,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const checkout = useCallback(async () => {
     if (cart.lines.length === 0) return
     setLoading(true)
+    setCheckoutError(null)
     try {
       const res = await fetch('/api/wix/checkout', {
         method: 'POST',
@@ -170,10 +173,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (data.url && data.url !== '#') {
         window.location.href = data.url
       } else {
+        const msg = data.error ?? 'Checkout unavailable — please try again.'
         console.error('[checkout] no URL returned', data)
+        setCheckoutError(msg)
       }
     } catch (err) {
       console.error('[checkout] failed', err)
+      setCheckoutError('Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -192,6 +198,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         removeLine,
         checkout,
         loading,
+        checkoutError,
       }}
     >
       {children}
