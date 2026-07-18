@@ -27,11 +27,10 @@ export async function getWixReviews(limit = 20): Promise<WixReview[]> {
   }
 
   try {
+    // Public endpoint only returns published reviews by default — no status filter needed
     const params = new URLSearchParams({
       public_key: publicKey,
-      status: 'published',
       per_page: String(Math.min(limit * 2, 50)),
-      'rating[gte]': '4',
     })
 
     const url = `https://api.fera.ai/v3/public/reviews?${params}`
