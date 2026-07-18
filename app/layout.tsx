@@ -57,7 +57,7 @@ export const metadata: Metadata = {
       'The 1:1 flour swap that fits your goals — 6x the protein, ⅓ the carbs, no adjustments.',
     images: [
       {
-        url: '/FF-social-share-1200x628.jpg',
+        url: '/FF-social-logo-only.jpg',
         width: 1200,
         height: 628,
         alt: 'Fit Flour — High-Protein Flour Substitute',
@@ -65,10 +65,10 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: 'Fit Flour — 1:1 High-Protein Flour Substitute',
     description: 'The 1:1 flour swap with 6x the protein and ⅓ the carbs.',
-    images: ['/FF-social-share-1200x628.jpg'],
+    images: ['/FF-social-logo-only.jpg'],
   },
   robots: {
     index: true,
