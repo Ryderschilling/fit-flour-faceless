@@ -27,10 +27,20 @@ export function CartDrawer() {
         role="dialog"
         aria-modal="true"
         aria-label="Shopping cart"
-        className={`fixed top-0 right-0 z-50 h-full w-full max-w-sm bg-white shadow-2xl flex flex-col transform transition-transform duration-300 ease-out ${
+        className={`fixed top-0 right-0 z-50 h-full w-full max-w-sm bg-white shadow-2xl flex flex-col transform transition-transform duration-300 ease-out overflow-hidden ${
           cartOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
+        {/* Background watermark */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" aria-hidden="true">
+          <Image
+            src="/images/FF-logo-transparent.png"
+            alt=""
+            width={320}
+            height={320}
+            className="opacity-[0.045] w-72 h-auto"
+          />
+        </div>
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-line">
           <div className="flex items-center gap-3">
