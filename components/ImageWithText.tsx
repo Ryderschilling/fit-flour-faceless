@@ -9,7 +9,7 @@ export function ImageWithText() {
       {/* Photo — left 45% on desktop */}
       <div className="absolute left-0 top-0 bottom-0 w-[45%] hidden md:block">
         <Image
-          src="/images/lifestyle/img-8306-edited.jpg"
+          src="/images/products/fit-flour-og-main.jpg"
           alt="Fit Flour bag with baked goods"
           fill
           className="object-cover object-center"
@@ -25,7 +25,7 @@ export function ImageWithText() {
       {/* Mobile: photo sits at top, fades downward */}
       <div className="absolute left-0 right-0 top-0 h-[45%] md:hidden">
         <Image
-          src="/images/lifestyle/img-8306-edited.jpg"
+          src="/images/products/fit-flour-og-main.jpg"
           alt="Fit Flour bag with baked goods"
           fill
           className="object-cover object-top"
