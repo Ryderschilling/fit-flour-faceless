@@ -17,7 +17,7 @@ export function Hero() {
         aria-hidden="true"
       />
 
-      {/* Wordmark + bag */}
+      {/* Wordmark + bags */}
       <div
         className="relative w-full flex items-center justify-center"
         style={{ minHeight: 'clamp(260px, 42vw, 580px)' }}
@@ -35,17 +35,41 @@ export function Hero() {
           FIT FLOUR
         </h1>
 
-        {/* Bag — position wrapper keeps translateY(15%), inner div animates + floats */}
+        {/* Dual-bag container — wide so bags genuinely separate */}
         <div
           className="relative"
-          style={{ zIndex: 10, width: 'clamp(140px, 20vw, 300px)', transform: 'translateY(15%)' }}
+          style={{
+            zIndex: 10,
+            width: 'clamp(300px, 44vw, 620px)',
+            height: 'clamp(280px, 44vw, 620px)',
+            transform: 'translateY(14%) translateX(-8%)',
+          }}
         >
-          <div className="hero-bag-anim">
+          {/* White bag — right side, behind, slightly higher */}
+          <div
+            className="hero-bag-anim absolute"
+            style={{ right: '8%', top: '12%', width: '50%', zIndex: 1 }}
+          >
             <Image
               src="/images/products/fit-flour-bag-hero.png"
-              alt="Fit Flour product bag"
+              alt="Fit Flour white bag"
               width={400}
               height={533}
+              className="object-contain w-full h-auto drop-shadow-xl"
+              priority
+            />
+          </div>
+
+          {/* Brown bag — left side, front, lower */}
+          <div
+            className="hero-bag-anim absolute"
+            style={{ left: '2%', bottom: '-6%', width: '78%', zIndex: 2 }}
+          >
+            <Image
+              src="/images/products/fit-flour-bag-brown.png"
+              alt="Fit Flour brown bag"
+              width={1024}
+              height={1515}
               className="object-contain w-full h-auto drop-shadow-2xl"
               priority
             />
@@ -54,7 +78,7 @@ export function Hero() {
       </div>
 
       {/* CTA — fades in after title + bag */}
-      <div className="hero-cta-anim relative z-10 mt-4 text-center max-w-lg">
+      <div className="hero-cta-anim relative z-10 mt-12 text-center max-w-lg">
         <p className="text-base text-ink/70 leading-relaxed mb-6">
           The 1:1 flour swap that fits your goals — 6x the protein, a third of the carbs, no
           adjustments, no failed bakes.
