@@ -69,8 +69,7 @@ export default function OurStoryPage() {
                 The Formula
               </h2>
               <p className="text-muted text-base leading-relaxed">
-                Crafted from a blend of protein-rich, whole-food ingredients. Gluten-free.
-                Dairy-free. Nut-free. No artificial anything. Just clean macros and real baking
+                Crafted from a blend of protein-rich, whole-food ingredients. Nut-free. No artificial anything. Just clean macros and real baking
                 performance.
               </p>
             </div>

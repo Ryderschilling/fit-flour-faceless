@@ -7,14 +7,9 @@ export const FAQ_ITEMS = [
       'Fit Flour is a high-protein, low-carb flour alternative designed for people who want to bake healthier without giving up the foods they love. It works as a 1-to-1 substitute for regular all-purpose flour.',
   },
   {
-    question: 'What is Fit Flour made from?',
-    answer:
-      'Fit Flour is crafted from a blend of protein-rich, whole-food ingredients that replace refined wheat flour. The formula is gluten-free, dairy-free, and nut-free — built for real food without the allergens or empty carbs.',
-  },
-  {
     question: 'How is Fit Flour different from regular flour?',
     answer:
-      'Unlike all-purpose flour, Fit Flour is packed with protein, lower in net carbs, and free from gluten. It delivers the same baking results — same texture, same rise, same taste — but with a macro profile that actually supports your health goals.',
+      'Unlike all-purpose flour, Fit Flour is packed with protein and lower in net carbs. It delivers the same baking results — same texture, same rise, same taste — but with a macro profile that actually supports your health goals.',
   },
   {
     question: 'Can I use Fit Flour as a 1-to-1 substitute?',
@@ -29,7 +24,7 @@ export const FAQ_ITEMS = [
   {
     question: 'Is Fit Flour gluten-free?',
     answer:
-      'Yes. Fit Flour is completely gluten-free, making it a safe and effective baking flour for those with celiac disease, gluten sensitivity, or anyone following a gluten-free lifestyle.',
+      'We do have a gluten-free option — be sure to grab our white bag.',
   },
 ]
 

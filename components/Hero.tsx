@@ -81,7 +81,7 @@ export function Hero() {
       <div className="hero-cta-anim relative z-10 mt-12 text-center max-w-lg">
         <p className="text-base text-ink/70 leading-relaxed mb-6">
           The 1:1 flour swap that fits your goals — 6x the protein, a third of the carbs, no
-          adjustments, no failed bakes.
+          adjustments, just delicious bakes.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link
