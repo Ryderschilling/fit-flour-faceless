@@ -126,16 +126,22 @@ export default async function ProductPage({ params }: Props) {
 
             {/* Feature pills */}
             <div className="flex flex-wrap gap-2">
-              {['1:1 Swap', '6x Protein', '⅓ the Carbs', 'Gluten Free', 'Dairy Free', 'Nut Free'].map(
-                (tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs font-semibold uppercase tracking-wider border border-line px-3 py-1.5 text-muted"
-                  >
-                    {tag}
-                  </span>
-                )
-              )}
+              {[
+                '1:1 Swap',
+                '6x Protein',
+                '⅓ the Carbs',
+                // Diet pills only apply to the gluten-free (white bag) product
+                ...(params.handle === 'gluten-free-limited-supply'
+                  ? ['Gluten Free', 'Dairy Free', 'Nut Free']
+                  : []),
+              ].map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs font-semibold uppercase tracking-wider border border-line px-3 py-1.5 text-muted"
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
 
             <AddToCartButton
